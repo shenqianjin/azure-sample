@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AzureTest {
+public class AzureTest extends BaseDeploy {
 
     public static void main(String[] args) throws IOException {
         final AtomicInteger count = new AtomicInteger(0);
@@ -55,32 +55,32 @@ public class AzureTest {
         final WebApp webApp1 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-01");
 //        webApp1.deploy(DeployType.WAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjinwebapp-demo\\qianjinwebapp-4maven-demo-01\\target\\qianjinwebapp-4maven-demo-01.war"),
 //                new DeployOptions().withRestartSite(false).withPath("webapps/ROOT_test_war"));
-        webApp1.deploy(DeployType.WAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjinwebapp-demo\\qianjinwebapp-4maven-demo-01\\target\\qianjinwebapp-4maven-demo-01 test.war"),
-                new DeployOptions().withRestartSite(trucd wee).withPath("webapps/qianjinwebapp-4maven-demo-01+test"));
-        System.out.println("1 [war]: one deploy completed.");
+        webApp1.deploy(DeployType.WAR, new File(SOURCE_WAR),
+                new DeployOptions().withRestartSite(true).withPath("webapps/qianjinwebapp-4maven-demo-01+test"));
+        System.out.println("[war]: one deploy completed.");
     }
     private static void warTest3(Azure azure) {
         final WebApp webApp1 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-01");
-        webApp1.warDeploy(new File("C:\\Users\\qianjinshen\\workspace\\qianjinwebapp-demo\\qianjinwebapp-4maven-demo-01\\target\\qianjinwebapp-4maven-demo-01.war"), "ROOT_test explored");
+        webApp1.warDeploy(new File(SOURCE_WAR), "ROOT_test explored");
         System.out.println("1 [war]: one deploy completed.");
     }
 
     private static void warTest(Azure azure) {
         final WebApp webApp1 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-02");
-        webApp1.deploy(DeployType.WAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjinwebapp-demo\\qianjinwebapp-demo-02\\target\\qianjinwebapp-demo-02.war"));
+        webApp1.deploy(DeployType.WAR, new File(SOURCE_WAR));
         System.out.println("1 [war]: one deploy completed.");
     }
 
     private static void warNonRootTest(Azure azure) {
         final WebApp webApp1 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-02");
-        webApp1.deploy(DeployType.WAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjinwebapp-demo\\qianjinwebapp-demo-02\\target\\qianjinwebapp-demo-02.war"),
+        webApp1.deploy(DeployType.WAR, new File(SOURCE_WAR),
                 new DeployOptions().withPath("webapps/qianjinwebapp-demo-02"));
         System.out.println("1 [war]: one deploy completed.");
     }
 
     private static void zipFromWarTest(Azure azure) {
         final WebApp webApp1 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-01");
-        webApp1.deploy(DeployType.ZIP, new File("C:\\Users\\qianjinshen\\workspace\\app.zip"));
+        webApp1.deploy(DeployType.ZIP, new File(SOURCE_ZIP_1));
         System.out.println("1 [zip]: one deploy completed.");
     }
 
@@ -92,7 +92,7 @@ public class AzureTest {
      */
     private static void bootJarTest(Azure azure) {
         final WebApp webApp2 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-javese-01");
-        webApp2.deploy(DeployType.JAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjinwebapp-demo\\qianjinwebapp-boot-demo-01\\target\\qianjinwebapp-boot-demo-01-0.0.1-SNAPSHOT.jar"),
+        webApp2.deploy(DeployType.JAR, new File(SOURCE_JAR),
                 new DeployOptions().withRestartSite(true).withPath("webapps/ROOT"));
         System.out.println("[jar]: one deploy completed.");
     }
@@ -107,7 +107,7 @@ public class AzureTest {
     private static void jarLibTest(Azure azure) {
         final WebApp webApp2 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-01");
 //        webApp2.deploy(DeployType.JAR_LIB, new File("C:\\Users\\qianjinshen\\workspace\\azure-core-1.7.0.jar"), new DeployOptions().withPath("lib/azure-core.jar"));
-        webApp2.deploy(DeployType.JAR_LIB, new File("C:\\Users\\qianjinshen\\workspace\\azure-core-1.7.0.jar"), new DeployOptions().withPath("lib3/lib31/azure-core.jar"));
+        webApp2.deploy(DeployType.JAR_LIB, new File(SOURCE_LIB_1), new DeployOptions().withPath("lib3/lib31/azure-core.jar"));
         System.out.println("2 [lib]: one deploy completed.");
     }
 
@@ -120,7 +120,7 @@ public class AzureTest {
      */
     private static void staticTest(Azure azure) {
         final WebApp webApp2 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-01");
-        webApp2.deploy(DeployType.STATIC, new File("C:\\Users\\qianjinshen\\workspace\\test.sh"), new DeployOptions().withPath("shell2"));
+        webApp2.deploy(DeployType.STATIC, new File(SOURCE_STATIC_1), new DeployOptions().withPath("shell2"));
         System.out.println("2 [static]: one deploy completed.");
     }
 
@@ -136,13 +136,13 @@ public class AzureTest {
      */
     private static void zipTest(Azure azure) {
         final WebApp webApp1 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-wl-03");
-        webApp1.deploy(DeployType.ZIP, new File("C:\\Users\\qianjinshen\\workspace\\test.zip"), new DeployOptions().withPath("zip1"));
+        webApp1.deploy(DeployType.ZIP, new File(SOURCE_ZIP_1), new DeployOptions().withPath("zip1"));
         System.out.println("1 [zip]: one deploy completed.");
     }
 
     private static void staticStartupLinuxTest(Azure azure) {
         final WebApp webApp2 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-02");
-        webApp2.deploy(DeployType.SCRIPT_STARTUP, new File("C:\\Users\\qianjinshen\\workspace\\startup.sh"));
+        webApp2.deploy(DeployType.SCRIPT_STARTUP, new File(SOURCE_STARTUP_LINUX));
         System.out.println("2 [jar]: one deploy completed.");
     }
 
@@ -155,7 +155,7 @@ public class AzureTest {
      */
     private static void staticStartupWindowsTest(Azure azure) {
         final WebApp webApp2 = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-ww-01");
-        webApp2.deploy(DeployType.SCRIPT_STARTUP, new File("C:\\Users\\qianjinshen\\workspace\\startup2.bat"), new DeployOptions().withPath("/home/start1"));
+        webApp2.deploy(DeployType.SCRIPT_STARTUP, new File(SOURCE_STARTUP_WINDOWS), new DeployOptions().withPath("/home/start1"));
         System.out.println("2 [jar]: one deploy completed.");
     }
 }
