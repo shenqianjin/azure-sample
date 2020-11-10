@@ -36,7 +36,7 @@ public class AzureOneDeployForLinuxTest {
     }
 
     private static void oneDeployForLinux(Azure azure) {
-        final WebApp webApp = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-wl-05");
+        final WebApp webApp = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-wl-04");
         webApp.deploy(DeployType.SCRIPT_STARTUP, new File("C:\\Users\\qianjinshen\\workspace\\qianjinwebapp-demo\\qianjinwebapp-4maven-demo-01\\src\\main\\resources\\deployment\\startup\\startup.sh"),
         new DeployOptions().withRestartSite(false));
         System.out.println(" - [startup]: one deploy completed.");
