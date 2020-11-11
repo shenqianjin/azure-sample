@@ -3,25 +3,16 @@ package com.microsoft.azure.example.sdk.mysql;
 
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.credentials.AzureCliCredentials;
-import com.microsoft.azure.management.Azure;
-import com.microsoft.azure.management.appservice.DeployOptions;
-import com.microsoft.azure.management.appservice.DeployType;
-import com.microsoft.azure.management.appservice.WebApp;
 import com.microsoft.azure.management.mysql.v2017_12_01.Server;
 import com.microsoft.azure.management.mysql.v2017_12_01.ServerUpdateParameters;
 import com.microsoft.azure.management.mysql.v2017_12_01.SslEnforcementEnum;
-import com.microsoft.azure.management.mysql.v2017_12_01.implementation.DatabaseInner;
 import com.microsoft.azure.management.mysql.v2017_12_01.implementation.FirewallRuleInner;
-import com.microsoft.azure.management.mysql.v2017_12_01.implementation.MySQLManagementClientImpl;
 import com.microsoft.azure.management.mysql.v2017_12_01.implementation.MySQLManager;
-import com.microsoft.azure.management.mysql.v2017_12_01.implementation.ServerInner;
-import com.microsoft.azure.storage.core.JsonUtilities;
 import com.microsoft.rest.LogLevel;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -63,9 +54,9 @@ public class AzureMySQlTest {
         ;
 //        listServers(mySQLManager);
 //        updateSSL(mySQLManager);
-        listFirewalls(mySQLManager);
+//        listFirewalls(mySQLManager);
 //        createOrUpdateFirewall(mySQLManager);
-//        createOrUpdateFirewall2(mySQLManager);
+        findAndDeleteFirewall(mySQLManager);
     }
 
 
@@ -88,7 +79,7 @@ public class AzureMySQlTest {
 
     public static void listFirewalls(MySQLManager manager) {
         List<FirewallRuleInner> servers = manager.firewallRules().inner().listByServer("qianjinshen", "qianjinshen-mysql-01");
-        servers.stream().forEach(e -> System.out.println(e.name() + " " + e.id()));
+        servers.stream().forEach(e -> System.out.println(e.name() + " " + e.id() + "\n"));
         System.out.println(servers.size());
     }
 
@@ -101,12 +92,12 @@ public class AzureMySQlTest {
         System.out.println(result.id() + "  " + result.name());
     }
 
-    public static void createOrUpdateFirewall2(MySQLManager manager) {
-        String ip = "167.220.255.104";
-        FirewallRuleInner rule = new FirewallRuleInner();
-        rule.withStartIpAddress(ip);
-        rule.withEndIpAddress(ip);
-        manager.firewallRules().inner().delete("qianjinshen", "qianjinshen-mysql-01", "AllowAllWindowsAzureIps");
+    public static void findAndDeleteFirewall(MySQLManager manager) {
+        // AllowAllWindowsAzureIps
+        String ruleName = "allow----------------";
+        FirewallRuleInner rule = manager.firewallRules().inner().get("qianjinshen", "qianjinshen-mysql-01", ruleName);
+        System.out.println(rule.name() + " " + rule.id() + "\n");
+        manager.firewallRules().inner().delete("qianjinshen", "qianjinshen-mysql-01", ruleName);
         System.out.println("done ....");
     }
 }
