@@ -27,7 +27,7 @@ public class AzureV2Test extends BaseDeploy {
                         count.addAndGet(1);
                         final Request request = chain.request();
                         final Response response = chain.proceed(request);
-                        return chain.proceed(chain.request());
+                        return response;
                     }
                 })
                 .authenticate(AzureCliCredentials.create())
@@ -38,9 +38,10 @@ public class AzureV2Test extends BaseDeploy {
 //        earTest(azure);
 //        jarLibTest(azure);
 //        staticTest(azure);
-        zipTest(azure);
+//        zipTest(azure);
 //        staticStartupLinuxTest(azure);
-
+        azure.resourceGroups().list();
+        System.out.println("done....");
     }
 
     private static void warTest(Azure azure) {
@@ -87,7 +88,7 @@ public class AzureV2Test extends BaseDeploy {
     private static void zipTest(Azure azure) {
         final WebApp webApp = azure.webApps().getByResourceGroup("qianjinshen", "qianjinshen-wl-04");
         webApp.deploy(DeployType.ZIP, new File(SOURCE_ZIP_1), new DeployOptions().withRestartSite(false).withPath(null));
-        webApp.deploy(DeployType.ZIP, new File(SOURCE_ZIP_2), new DeployOptions().withRestartSite(false).withPath("zipFolder1").withCleanDeployment(false));
+//        webApp.deploy(DeployType.ZIP, new File(SOURCE_ZIP_2), new DeployOptions().withRestartSite(false).withPath("zipFolder1").withCleanDeployment(false));
         System.out.println("[zip]: one deploy completed.");
     }
 

@@ -6,8 +6,10 @@ import com.microsoft.azure.credentials.AzureCliCredentials;
 import com.microsoft.azure.management.mysql.v2017_12_01.Server;
 import com.microsoft.azure.management.mysql.v2017_12_01.ServerUpdateParameters;
 import com.microsoft.azure.management.mysql.v2017_12_01.SslEnforcementEnum;
+import com.microsoft.azure.management.mysql.v2017_12_01.implementation.DatabaseInner;
 import com.microsoft.azure.management.mysql.v2017_12_01.implementation.FirewallRuleInner;
 import com.microsoft.azure.management.mysql.v2017_12_01.implementation.MySQLManager;
+import com.microsoft.azure.management.mysql.v2017_12_01.implementation.ServerInner;
 import com.microsoft.rest.LogLevel;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -17,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AzureMySQlTest {
+public class AzureMySQLTest {
 
     public static void main(String[] args) throws IOException {
         final AtomicInteger count = new AtomicInteger(0);
@@ -26,7 +28,7 @@ public class AzureMySQlTest {
                 ;
 //        client.subscriptionId();
 //        client.checkNameAvailabilitys();
-        // list mysql server
+        // list mysql
         PagedList<ServerInner> serverInners = client.servers().list();
         // client.servers()
         System.out.println(serverInners.size());
@@ -38,7 +40,7 @@ public class AzureMySQlTest {
         List<FirewallRuleInner> firewallRuleInners = client.firewallRules().listByServer("qianjinshen", "petstore4qianjin");
         System.out.println(firewallRuleInners.size());*/
         AzureCliCredentials credentials = AzureCliCredentials.create();
-        MySQLManager mySQLManager = MySQLManager.configure()
+        MySQLManager manager = MySQLManager.configure()
                 .withLogLevel(LogLevel.BODY_AND_HEADERS)
                 .withInterceptor(new Interceptor() {
                     @Override
@@ -52,17 +54,27 @@ public class AzureMySQlTest {
                 .authenticate(credentials, "685ba005-af8d-4b04-8f16-a7bf38b2eb5a")
 //                .withDefaultSubscription()
         ;
-//        listServers(mySQLManager);
-//        updateSSL(mySQLManager);
-//        listFirewalls(mySQLManager);
-//        createOrUpdateFirewall(mySQLManager);
-        findAndDeleteFirewall(mySQLManager);
+        listServers(manager);
+        listServerInners(manager);
+//        updateSSL(manager);
+//        listFirewalls(manager);
+//        createOrUpdateFirewall(manager);
+//        findAndDeleteFirewall(manager);
+        listDatabases(manager);
+        manager.
     }
 
 
     public static void listServers(MySQLManager manager) {
         PagedList<Server> servers = manager.servers().list();
-        servers.stream().forEach(e -> System.out.println(e.name() + " " + e.resourceGroupName()));
+        servers.stream().forEach(e -> System.out.println(e.name() + " " + e.fullyQualifiedDomainName()));
+        System.out.println(servers.size());
+    }
+
+
+    public static void listServerInners(MySQLManager manager) {
+        PagedList<ServerInner> servers = manager.servers().inner().list();
+        servers.stream().forEach(e -> System.out.println(e.name() + " " + e.fullyQualifiedDomainName()));
         System.out.println(servers.size());
     }
 
@@ -99,5 +111,11 @@ public class AzureMySQlTest {
         System.out.println(rule.name() + " " + rule.id() + "\n");
         manager.firewallRules().inner().delete("qianjinshen", "qianjinshen-mysql-01", ruleName);
         System.out.println("done ....");
+    }
+
+    public static void listDatabases(MySQLManager manager) {
+        List<DatabaseInner> databases = manager.databases().inner().listByServer("qianjinshen", "qianjinshen-mysql-01");
+        databases.stream().forEach(e -> System.out.println(e.name() + " " + e.charset()));
+        System.out.println(databases.size());
     }
 }
