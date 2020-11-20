@@ -21,6 +21,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -154,5 +155,13 @@ public class AzureMySQLTest {
         System.out.println(databases.size());
         databases.stream().forEach(e -> System.out.println(e));
 
+    }
+
+    public static void createDatabases(MySQLManager manager) {
+        DatabaseInner parameters = new DatabaseInner();
+        parameters.withCharset(StandardCharsets.UTF_8.toString());
+        parameters.withCollation("");
+        DatabaseInner database = manager.databases().inner().createOrUpdate("qianjinshen", "qianjinshen-mysql-01", "petstore", parameters);
+        System.out.println(database);
     }
 }
