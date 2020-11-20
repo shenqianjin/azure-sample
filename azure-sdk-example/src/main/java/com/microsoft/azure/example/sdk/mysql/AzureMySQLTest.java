@@ -4,8 +4,13 @@ package com.microsoft.azure.example.sdk.mysql;
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.credentials.AzureCliCredentials;
 import com.microsoft.azure.management.mysql.v2017_12_01.Server;
+import com.microsoft.azure.management.mysql.v2017_12_01.ServerForCreate;
+import com.microsoft.azure.management.mysql.v2017_12_01.ServerPropertiesForCreate;
 import com.microsoft.azure.management.mysql.v2017_12_01.ServerUpdateParameters;
+import com.microsoft.azure.management.mysql.v2017_12_01.ServerVersion;
+import com.microsoft.azure.management.mysql.v2017_12_01.Sku;
 import com.microsoft.azure.management.mysql.v2017_12_01.SslEnforcementEnum;
+import com.microsoft.azure.management.mysql.v2017_12_01.StorageProfile;
 import com.microsoft.azure.management.mysql.v2017_12_01.implementation.DatabaseInner;
 import com.microsoft.azure.management.mysql.v2017_12_01.implementation.FirewallRuleInner;
 import com.microsoft.azure.management.mysql.v2017_12_01.implementation.MySQLManager;
@@ -17,6 +22,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AzureMySQLTest {
@@ -54,15 +60,17 @@ public class AzureMySQLTest {
                 .authenticate(credentials, "685ba005-af8d-4b04-8f16-a7bf38b2eb5a")
 //                .withDefaultSubscription()
         ;
-        listServers(manager);
-        listServerInners(manager);
+//        listServers(manager);
+//        listServerInners(manager);
 //        updateSSL(manager);
 //        listFirewalls(manager);
 //        createOrUpdateFirewall(manager);
 //        findAndDeleteFirewall(manager);
-        listDatabases(manager);
-        manager.
+//        listDatabases(manager);
+
     }
+
+
 
 
     public static void listServers(MySQLManager manager) {
@@ -76,6 +84,33 @@ public class AzureMySQLTest {
         PagedList<ServerInner> servers = manager.servers().inner().list();
         servers.stream().forEach(e -> System.out.println(e.name() + " " + e.fullyQualifiedDomainName()));
         System.out.println(servers.size());
+    }
+
+    public static void createServer(MySQLManager manager) {
+        ServerForCreate parameters = new ServerForCreate();
+        parameters.withLocation("US");
+
+        Sku sku = new Sku();
+//        sku.withSize();
+//        sku.withFamily();
+//        sku.withTier();
+//        sku.withName();
+        parameters.withSku(sku);
+
+        ServerPropertiesForCreate properties = new ServerPropertiesForCreate();
+        properties.withSslEnforcement(SslEnforcementEnum.DISABLED);
+        StorageProfile storageProfile = new StorageProfile();
+//        storageProfile.withBackupRetentionDays();
+//        storageProfile.withGeoRedundantBackup();
+//        storageProfile.withStorageAutogrow();
+//        storageProfile.withStorageMB();
+        properties.withStorageProfile(storageProfile);
+
+        ServerVersion version = new ServerVersion();
+        properties.withVersion(ServerVersion.FIVE_FULL_STOP_SEVEN);
+        parameters.withProperties(properties);
+        manager.servers().inner().create("qianjinshen", "qianjin-" + UUID.randomUUID().toString().replaceAll("\\.", ""), parameters);
+        
     }
 
     public static void updateSSL(MySQLManager manager) {
@@ -117,5 +152,7 @@ public class AzureMySQLTest {
         List<DatabaseInner> databases = manager.databases().inner().listByServer("qianjinshen", "qianjinshen-mysql-01");
         databases.stream().forEach(e -> System.out.println(e.name() + " " + e.charset()));
         System.out.println(databases.size());
+        databases.stream().forEach(e -> System.out.println(e));
+
     }
 }
