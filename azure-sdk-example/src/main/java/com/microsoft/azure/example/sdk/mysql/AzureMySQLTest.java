@@ -110,7 +110,7 @@ public class AzureMySQLTest {
         properties.withVersion(ServerVersion.FIVE_FULL_STOP_SEVEN);
         parameters.withProperties(properties);
         manager.servers().inner().create("qianjinshen", "qianjin-" + UUID.randomUUID().toString().replaceAll("\\.", ""), parameters);
-        
+
     }
 
     public static void updateSSL(MySQLManager manager) {
