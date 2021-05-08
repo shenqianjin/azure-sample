@@ -9,19 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>azure-sdk-example</artifactId>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <artifactId>sdk-azure-mysql</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -32,18 +25,10 @@
 
         <!-- https://mvnrepository.com/artifact/com.microsoft.azure.mysql.v2017_12_01/azure-mgmt-mysql -->
         <dependency>
-            <groupId>com.microsoft.azure.mysql.v2017_12_01</groupId>
+            <groupId>com.microsoft.azure.mysql.v2020_01_01</groupId>
             <artifactId>azure-mgmt-mysql</artifactId>
-            <version>1.0.0-beta-4</version>
+            <version>1.0.0-beta</version>
         </dependency>
-
-        <!-- for log -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
-        </dependency>
-
     </dependencies>
 
 </project>

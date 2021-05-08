@@ -9,7 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>azure-sdk-example</module>
+        <module>sdk-azure</module>
+        <module>sdk-azure-mysql</module>
+        <module>sdk-policyinsight</module>
+        <module>sdk-sql-server</module>
     </modules>
 
     <build>
