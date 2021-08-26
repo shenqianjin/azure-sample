@@ -13,6 +13,7 @@
         <module>sdk-azure-mysql</module>
         <module>sdk-policyinsight</module>
         <module>sdk-sql-server</module>
+        <module>sdk-webapp</module>
     </modules>
 
     <build>

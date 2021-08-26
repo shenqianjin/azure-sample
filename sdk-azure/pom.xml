@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>azure-example</artifactId>
+        <artifactId>azure-sample</artifactId>
         <groupId>com.microsoft.example</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.microsoft.azure</groupId>
             <artifactId>azure</artifactId>
-            <version>1.37.0</version>
+            <version>1.41.1</version>
         </dependency>
 
 
@@ -39,11 +39,11 @@
             <version>1.6.4</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.microsoft.azure</groupId>
             <artifactId>azure-mgmt-appservice</artifactId>
             <version>1.40.1-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

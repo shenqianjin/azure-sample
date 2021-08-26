@@ -45,25 +45,35 @@ public class AzureOneDeployForLinuxTest {
     }
 
     public static void canGetDeploymentStatus(Azure azure) throws InterruptedException {
-        WebApp wa = azure.webApps().getByResourceGroup("qianjin-web", "qianjin-web-test-04");
+        WebApp wa = azure.webApps().getByResourceGroup("qianjin-web", "qianjin-web-central-us-euap-02");
+//        WebApp wa = azure.webApps().getByResourceGroup("qianjin-web", "qianjin-web-central-us-euap-01");
+//        WebApp wa = azure.webApps().getByResourceGroup("qianjin-web", "qianjin-web-central-us-euap");
+//        WebApp wa = azure.webApps().getByResourceGroup("qianjin-web", "qianjin-web-central-us");
+        //WebApp wa = azure.webApps().getByResourceGroup("qianjin-web", "qianjin-web-01");
+//        WebApp wa = azure.webApps().getByResourceGroup("qianjin-web", "qianjin-web-dpst-01");
         //WebApp wa = azure.webApps().getByResourceGroup("qianjin-deploy-status", "qianjin-web-central-us-euap");
-        AsyncDeploymentResult result = wa.pushDeploy(DeployType.WAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjin-demo\\demo-01\\target\\demo-01.war"), null);
+        DeployOptions options = new DeployOptions().withTrackDeployment(true).withRestartSite(true).withCleanDeployment(true);
+        AsyncDeploymentResult result = wa.pushDeploy(DeployType.JAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjin-demo\\boot-demo\\demo-boot-01\\target\\demo-boot-01-0.0.1-SNAPSHOT.jar"), options);
+        // AsyncDeploymentResult result = wa.pushDeploy(DeployType.WAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjin-demo\\boot-demo\\demo-boot-02-mysql\\target\\demo-boot-02-mysql-0.0.1-SNAPSHOT.jar"), options);
+        //AsyncDeploymentResult result = wa.pushDeploy(DeployType.WAR, new File("C:\\Users\\qianjinshen\\workspace\\qianjin-demo\\webapp-demo\\demo-01\\target\\demo-01.war"), options);
 //        AsyncDeploymentResult result = wa.pushZipDeploy(new File("C:/github/app.zip"));
-        DeploymentStatus status = wa.getDeploymentStatus(result.getDeploymentId());
-        while (status == null) {
-            System.out.println("status not ready");
-            Thread.sleep(10 * 1000);
-            // try again
-            status = wa.getDeploymentStatus(result.getDeploymentId());
-        }
-        BuildStatus buildStatus = status.buildStatus();
-        System.out.println("build status: " + buildStatus);
-        while (buildStatus != BuildStatus.BUILD_SUCCESSFUL) {
-            Thread.sleep(10 * 1000);
+        String deploymentId = result.deploymentId(); //"03e56223-5b30-45c3-b508-e8e8669f8dad";
+        getDeploymentStatus(wa, deploymentId, 600);
+
+    }
+
+    private static void getDeploymentStatus(WebApp wa, String deploymentId, int count) throws InterruptedException {
+        DeploymentStatus status;
+        long start = System.currentTimeMillis();
+        int bi = 0;
+        while (bi++ < count) {
+            Thread.sleep(1 * 1000);
             // poll again
-            status = wa.getDeploymentStatus(result.getDeploymentId());
-            buildStatus = status.buildStatus();
-            System.out.println("build status: " + buildStatus);
+            status = wa.getDeploymentStatus(deploymentId);
+            System.out.println("build status: " + status.buildStatus());
+            System.out.println("build status: " + status.buildStatus() + ", cost: " + (System.currentTimeMillis() - start) / 1000 + " seconds");
+            System.out.println("build status: " + status.buildStatus() + ", numberOfInstancesSuccessful: " + status.numberOfInstancesSuccessful()
+            + ", numberOfInstancesInProgress: " + status.numberOfInstancesInProgress());
         }
     }
 }
